@@ -24,17 +24,25 @@ def analyze_resume(uploaded_file, job_description, api_key):
     messages = [{"role": "user", "content": prompt_score}]
 
     # OpenAI client
-    client = OpenAI(api_key=api_key)
-    stream = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=messages,
-        stream=True,
-    )
+    # client = OpenAI(api_key=api_key)
+    # stream = client.chat.completions.create(
+    #     model="gpt-3.5-turbo",
+    #     messages=messages,
+    #     stream=True,
+    # )
+    #
+    # # Collect response
+    # response_text = ""
+    # for event in stream:
+    #     if event.type == "response.output_text.delta":
+    #         response_text += event.delta
 
-    # Collect response
-    response_text = ""
-    for event in stream:
-        if event.type == "response.output_text.delta":
-            response_text += event.delta
-
-    return {"score": "See GPT output", "suggestions": response_text.split("\n")}
+    return {
+        "score": 85,
+        "suggestions": [
+            "Rewrite bullet 1",
+            "Add keyword 'Python'",
+            "Highlight leadership experience"
+        ]
+    }
+    # return {"score": "See GPT output", "suggestions": response_text.split("\n")}
