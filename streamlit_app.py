@@ -2,6 +2,7 @@ import streamlit as st
 from openai import OpenAI
 from analyze_resume import analyze_resume
 from pdf_generator import generate_pdf_from_markdown
+from utils import normalize_cv_markdown
 
 st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="wide")
 
@@ -43,11 +44,12 @@ else:
 
             # Improved Resume
             if result["improved_cv"]:
+                clean_cv = normalize_cv_markdown(result["improved_cv"])
                 st.subheader("📝 Improved Resume (Preview)")
-                st.markdown(result["improved_cv"])
+                st.markdown(clean_cv)
 
                 # PDF Download
-                pdf_bytes = generate_pdf_from_markdown(result["improved_cv"])
+                pdf_bytes = generate_pdf_from_markdown(clean_cv)
                 st.download_button(
                     "📥 Download Improved Resume (PDF)",
                     data=pdf_bytes,
