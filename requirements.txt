@@ -1,2 +1,4 @@
 streamlit
 openai
+python-docx
+PyPDF2==3.1.1

@@ -23,7 +23,8 @@ else:
 
     # Let the user upload a file via `st.file_uploader`.
     uploaded_file = st.file_uploader(
-        "Upload your Resume (.txt or .md for now)", type=("txt", "md")
+        "Upload your Resume (.txt, .md, or .pdf)",
+        type=("txt", "md", "pdf")
     )
 
     job_description = st.text_area(

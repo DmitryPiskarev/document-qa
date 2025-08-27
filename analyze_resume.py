@@ -1,9 +1,14 @@
 # analyze_resume.py
 from openai import OpenAI
+from pdf_parser import parse_pdf
+
 
 def analyze_resume(uploaded_file, job_description, api_key):
     # 1️⃣ Read document
-    resume_text = uploaded_file.read().decode()
+    if uploaded_file.name.endswith(".pdf"):
+        resume_text = parse_pdf(uploaded_file)
+    else:
+        resume_text = uploaded_file.read().decode()
 
     # 2️⃣ GPT prompt
     prompt_score = f"""
