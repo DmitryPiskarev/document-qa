@@ -23,6 +23,16 @@ def generate_pdf_from_markdown(md_text: str) -> bytes:
     # Custom styles
     styles.add(ParagraphStyle(
         name="NameHeader",
+        fontSize=30,
+        leading=26,
+        spaceAfter=12,
+        alignment=1,  # center
+        textColor=colors.black,
+        fontName="Times-Bold"
+    ))
+
+    styles.add(ParagraphStyle(
+        name="PositionHeader",
         fontSize=22,
         leading=26,
         spaceAfter=12,
@@ -77,8 +87,12 @@ def generate_pdf_from_markdown(md_text: str) -> bytes:
             flow.append(Paragraph(line, styles["Contact"]))
 
         elif line.startswith("## "):  # Section header
-            flow.append(HRFlowable(width="100%", thickness=0.6, color=colors.grey, spaceBefore=10, spaceAfter=4))
+            flow.append(HRFlowable(width="100%", thickness=0.6, color=colors.grey, spaceBefore=6, spaceAfter=2))
             flow.append(Paragraph(line[3:], styles["SectionHeader"]))
+
+        elif line.startswith("** "):  # Role header
+            flow.append(HRFlowable(width="100%", thickness=0.6, color=colors.grey, spaceBefore=10, spaceAfter=2))
+            flow.append(Paragraph(line[3:], styles["PositionHeader"]))
 
         else:  # Body text
             flow.append(Paragraph(line, styles["BodyTextCustom"]))
