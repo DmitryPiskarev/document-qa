@@ -1,16 +1,40 @@
 # analyze_resume.py
-from openai import OpenAI
+from openai import OpenAI, error as openai_error
 from pdf_parser import parse_pdf
+from docx_parser import parse_docx
 
 
-def analyze_resume(uploaded_file, job_description, api_key):
-    # 1️⃣ Read document
-    if uploaded_file.name.endswith(".pdf"):
-        resume_text = parse_pdf(uploaded_file)
-    else:
-        resume_text = uploaded_file.read().decode()
+def analyze_resume(uploaded_file, job_description, api_key=None, use_mock=False):
+    """
+    Analyze resume vs job description.
+    Returns dict: {"score": int/str, "suggestions": list of str}
+    """
 
-    # 2️⃣ GPT prompt
+    # 1️⃣ Parse uploaded file
+    filename = uploaded_file.name.lower()
+    try:
+        if filename.endswith(".pdf"):
+            resume_text = parse_pdf(uploaded_file)
+        elif filename.endswith(".docx"):
+            resume_text = parse_docx(uploaded_file)
+        else:  # txt, md, etc.
+            resume_text = uploaded_file.read().decode()
+    except Exception as e:
+        return {"score": "Error parsing file", "suggestions": [str(e)]}
+
+    # 2️⃣ Mock output (useful for testing UI without API quota)
+    if use_mock or not api_key:
+        return {
+            "score": 85,
+            "suggestions": [
+                "Rewrite bullet 1 to highlight leadership",
+                "Add keyword 'Python' in experience section",
+                "Emphasize results using numbers"
+            ]
+        }
+
+    # 3️⃣ Call OpenAI API
+    client = OpenAI(api_key=api_key)
     prompt_score = f"""
     Here is a resume:
     {resume_text}
@@ -21,28 +45,24 @@ def analyze_resume(uploaded_file, job_description, api_key):
     1. Give a match score from 0 to 100 on how well this resume matches the job.
     2. Suggest rewritten bullets / improvements to better match the job description.
     """
+
     messages = [{"role": "user", "content": prompt_score}]
 
-    # OpenAI client
-    # client = OpenAI(api_key=api_key)
-    # stream = client.chat.completions.create(
-    #     model="gpt-3.5-turbo",
-    #     messages=messages,
-    #     stream=True,
-    # )
-    #
-    # # Collect response
-    # response_text = ""
-    # for event in stream:
-    #     if event.type == "response.output_text.delta":
-    #         response_text += event.delta
+    try:
+        stream = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=messages,
+            stream=True,
+        )
 
-    return {
-        "score": 85,
-        "suggestions": [
-            "Rewrite bullet 1",
-            "Add keyword 'Python'",
-            "Highlight leadership experience"
-        ]
-    }
-    # return {"score": "See GPT output", "suggestions": response_text.split("\n")}
+        response_text = ""
+        for event in stream:
+            if event.type == "response.output_text.delta":
+                response_text += event.delta
+
+        suggestions = [line for line in response_text.split("\n") if line.strip()]
+        return {"score": "See GPT output", "suggestions": suggestions}
+
+    except openai_error.OpenAIError as e:
+        # Catch any OpenAI errors and return as frontend-friendly message
+        return {"score": "Error", "suggestions": [str(e)]}
