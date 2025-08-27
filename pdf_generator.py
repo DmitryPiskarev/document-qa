@@ -4,6 +4,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, HRFlowable
 from reportlab.lib.pagesizes import LETTER
 from reportlab.lib import colors
 
+
 def generate_pdf_from_markdown(md_text: str) -> bytes:
     buffer = BytesIO()
 
@@ -48,10 +49,10 @@ def generate_pdf_from_markdown(md_text: str) -> bytes:
 
     styles.add(ParagraphStyle(
         name="PositionHeader",
-        fontSize=12,
-        leading=14,
-        spaceBefore=6,
-        spaceAfter=2,
+        fontSize=10.5,
+        leading=12.5,
+        spaceBefore=4,
+        spaceAfter=4,
         fontName="Times-Bold"
     ))
 
