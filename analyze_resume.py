@@ -24,7 +24,7 @@ def analyze_resume(uploaded_file, job_description, api_key=None, use_mock=True):
 
     # 2️⃣ Mock output (useful for testing UI without API quota)
     if use_mock or not api_key:
-        return {
+        return resume_text, {
             "score": 85,
             "suggestions": [
                 "Rewrite bullet 1 to highlight leadership",
@@ -61,9 +61,9 @@ def analyze_resume(uploaded_file, job_description, api_key=None, use_mock=True):
                 response_text += event.delta
 
         suggestions = [line for line in response_text.split("\n") if line.strip()]
-        return {"score": "See GPT output", "suggestions": suggestions}
+        return resume_text, {"score": "See GPT output", "suggestions": suggestions}
 
     except OpenAIError as e:
         # Catch any OpenAI errors and return as frontend-friendly message
-        return {"score": "Error", "suggestions": [str(e)]}
+        return resume_text, {"score": "Error", "suggestions": [str(e)]}
 

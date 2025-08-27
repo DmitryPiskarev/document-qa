@@ -37,7 +37,7 @@ else:
         if st.button("Analyze Resume"):
             # Show a spinner while processing
             with st.spinner("Analyzing resume, please wait..."):
-                result = analyze_resume(uploaded_file, job_description, openai_api_key, use_mock=False)
+                resume_text, result = analyze_resume(uploaded_file, job_description, openai_api_key, use_mock=False)
 
             # Display results
             st.success("Analysis complete!")
@@ -45,3 +45,6 @@ else:
             st.write("Suggestions:")
             for bullet in result["suggestions"]:
                 st.write("-", bullet)
+
+            st.subheader("Original Resume:")
+            st.text_area("Resume text", resume_text, height=300)
