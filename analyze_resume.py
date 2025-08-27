@@ -56,14 +56,13 @@ def analyze_resume(uploaded_file, job_description, api_key=None, use_mock=True):
         )
 
         response_text = ""
-        for event in stream:
-            if event.type == "response.output_text.delta":
-                response_text += event.delta
+        for chunk in stream:
+            if chunk.choices and chunk.choices[0].delta:
+                response_text += chunk.choices[0].delta.get("content", "")
 
         suggestions = [line for line in response_text.split("\n") if line.strip()]
         return resume_text, {"score": "See GPT output", "suggestions": suggestions}
 
     except OpenAIError as e:
-        # Catch any OpenAI errors and return as frontend-friendly message
         return resume_text, {"score": "Error", "suggestions": [str(e)]}
 
