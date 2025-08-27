@@ -8,6 +8,7 @@ from reportlab.lib import colors
 def generate_pdf_from_markdown(md_text: str) -> bytes:
     buffer = BytesIO()
 
+    # Create PDF document
     doc = SimpleDocTemplate(
         buffer,
         pagesize=LETTER,
@@ -19,88 +20,93 @@ def generate_pdf_from_markdown(md_text: str) -> bytes:
 
     styles = getSampleStyleSheet()
 
+    # Custom styles
     styles.add(ParagraphStyle(
         name="NameHeader",
-        fontSize=28,
+        fontSize=30,
         leading=32,
         alignment=1,  # center
-        spaceAfter=6,
-        fontName="Times-Bold"
+        fontName="Times-Bold",
+        spaceAfter=6
     ))
 
     styles.add(ParagraphStyle(
         name="Contact",
         fontSize=10,
         leading=12,
-        alignment=1,
+        alignment=1,  # center
         textColor=colors.grey,
         fontName="Times-Italic",
-        spaceAfter=8
+        spaceAfter=10
     ))
 
     styles.add(ParagraphStyle(
         name="SectionHeader",
         fontSize=14,
         leading=16,
+        fontName="Times-Bold",
         spaceBefore=12,
-        spaceAfter=4,
-        fontName="Times-Bold"
+        spaceAfter=6
     ))
 
     styles.add(ParagraphStyle(
         name="PositionHeader",
-        fontSize=10.5,
-        leading=12.5,
+        fontSize=11,
+        leading=13,
+        fontName="Times-Bold",
         spaceBefore=4,
-        spaceAfter=4,
-        fontName="Times-Bold"
+        spaceAfter=2
     ))
 
     styles.add(ParagraphStyle(
         name="BodyTextCustom",
         fontSize=10.5,
-        leading=12.5,
+        leading=13,
+        fontName="Times-Roman",
         spaceAfter=4,
-        alignment=4,  # justify
-        fontName="Times-Roman"
+        alignment=4  # justify
     ))
 
     flow = []
-
     contact_inserted = False
 
-    for line in md_text.splitlines():
+    lines = md_text.splitlines()
+    for i, line in enumerate(lines):
         line = line.strip()
         if not line:
             flow.append(Spacer(1, 4))
             continue
 
-        # Name
+        # Name header
         if line.startswith("# "):
-            flow.append(Paragraph(line[2:], styles["NameHeader"]))
+            flow.append(Paragraph(line[2:].strip(), styles["NameHeader"]))
             flow.append(HRFlowable(width="100%", thickness=0.8, color=colors.grey, spaceBefore=6, spaceAfter=10))
 
         # Contacts
-        elif line.startswith("📧") or line.startswith("📞") or line.startswith("🌐"):
+        elif line.startswith(("📧", "📞", "🌐")):
             flow.append(Paragraph(line, styles["Contact"]))
             if not contact_inserted:
                 flow.append(HRFlowable(width="100%", thickness=0.6, color=colors.grey, spaceBefore=4, spaceAfter=10))
                 contact_inserted = True
 
-        # Section headers
-        elif line.startswith("### ") or line.startswith("## "):
-            flow.append(HRFlowable(width="100%", thickness=0.5, color=colors.grey, spaceBefore=6, spaceAfter=2))
-            flow.append(Paragraph(line.lstrip("# ").strip(), styles["SectionHeader"]))
+        # Section headers (Career Objective, Core Competencies, Professional Experience, etc.)
+        elif line.startswith("## "):
+            flow.append(HRFlowable(width="100%", thickness=0.5, color=colors.grey, spaceBefore=6, spaceAfter=4))
+            flow.append(Paragraph(line[3:].strip(), styles["SectionHeader"]))
 
-        # Position + company detection (bold + dash)
-        elif line.startswith("**") and "—" in line:
-            clean_line = line.replace("*", "")
+        # Position / Company
+        elif line.startswith("### ") or ("—" in line and line.startswith("**")):
+            clean_line = line.replace("*", "").replace("### ", "").strip()
             flow.append(Paragraph(clean_line, styles["PositionHeader"]))
             flow.append(Spacer(1, 2))
 
-        # Body text
+        # Body text or bullets
         else:
-            flow.append(Paragraph(line, styles["BodyTextCustom"]))
+            # Standardize bullet lists
+            if line.startswith("- "):
+                flow.append(Paragraph(line, styles["BodyTextCustom"]))
+            else:
+                flow.append(Paragraph(line, styles["BodyTextCustom"]))
 
     doc.build(flow)
     pdf = buffer.getvalue()
