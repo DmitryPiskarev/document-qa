@@ -26,7 +26,7 @@ else:
     if uploaded_file and job_description:
         if st.button("🚀 Analyze Resume"):
             with st.spinner("Analyzing resume, please wait..."):
-                resume_text, result = analyze_resume(uploaded_file, job_description, openai_api_key, use_mock=False)
+                resume_text, result = analyze_resume(uploaded_file, job_description, openai_api_key, use_mock=True)
 
             st.success("✅ Analysis complete!")
 
