@@ -1,10 +1,11 @@
+# analyze_resume.py
+from openai import OpenAI
 
-def analyze_resume(uploaded_file, job_description):
+def analyze_resume(uploaded_file, job_description, api_key):
     # 1️⃣ Read document
     resume_text = uploaded_file.read().decode()
 
-    # 2️⃣ Compute similarity / match score (optional embedding)
-    # For MVP, we can just rely on GPT to judge match:
+    # 2️⃣ GPT prompt
     prompt_score = f"""
     Here is a resume:
     {resume_text}
@@ -17,19 +18,18 @@ def analyze_resume(uploaded_file, job_description):
     """
     messages = [{"role": "user", "content": prompt_score}]
 
-    # Call OpenAI API (same as template)
-    client = OpenAI(api_key=openai_api_key)
+    # OpenAI client
+    client = OpenAI(api_key=api_key)
     stream = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=messages,
         stream=True,
     )
 
-    # Collect response as text
+    # Collect response
     response_text = ""
     for event in stream:
         if event.type == "response.output_text.delta":
             response_text += event.delta
 
-    # Parse response: you could split score vs suggestions, or just show full text
     return {"score": "See GPT output", "suggestions": response_text.split("\n")}
