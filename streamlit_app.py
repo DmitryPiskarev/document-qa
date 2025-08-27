@@ -2,21 +2,19 @@ import streamlit as st
 from openai import OpenAI
 from analyze_resume import analyze_resume
 
-# Show title and description.
-st.title("📄 Match your CV with Job Description!")
-st.write("Upload your Resume + Job description below and see how much they fit each other.")
+st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="wide")
 
+# Title
+st.title("📄 CV ↔ Job Description Matcher")
+st.caption("Get a match score, improvement suggestions, and a polished resume rewrite.")
+
+# API Key
 openai_api_key = st.text_input("🔑 OpenAI API Key", type="password")
 
 if not openai_api_key:
     st.info("Please add your OpenAI API key to continue.", icon="🗝️")
 else:
-    client = OpenAI(api_key=openai_api_key)
-
-    uploaded_file = st.file_uploader(
-        "📎 Upload your Resume (.txt, .md, or .pdf)",
-        type=("txt", "md", "pdf")
-    )
+    uploaded_file = st.file_uploader("📎 Upload your Resume", type=("txt", "md", "pdf", "docx"))
 
     job_description = st.text_area(
         "💼 Paste Job Description",
@@ -31,13 +29,16 @@ else:
 
             st.success("✅ Analysis complete!")
 
-            # Match Score
-            st.metric(label="Match Score", value=result["score"])
+            # Layout in 2 columns
+            col1, col2 = st.columns([1, 2])
 
-            # Suggestions
-            st.subheader("✨ Suggestions for Improvement")
-            for bullet in result["suggestions"]:
-                st.markdown(f"- ✅ **{bullet}**")
+            with col1:
+                st.metric(label="Match Score", value=result["score"])
+
+            with col2:
+                st.subheader("✨ Suggestions for Improvement")
+                for bullet in result["suggestions"]:
+                    st.markdown(f"✔️ {bullet}")
 
             # Improved Resume
             if result["improved_cv"]:
@@ -51,6 +52,6 @@ else:
                     mime="text/markdown",
                 )
 
-            # Original
+            # Original Resume
             with st.expander("📄 Original Resume (parsed text)"):
                 st.text_area("Resume text", resume_text, height=300)
