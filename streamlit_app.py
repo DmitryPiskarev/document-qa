@@ -46,7 +46,7 @@ else:
             if result["improved_cv"]:
                 clean_cv = normalize_cv_markdown(result["improved_cv"])
                 st.subheader("📝 Improved Resume (Preview)")
-                st.markdown(clean_cv)
+                st.markdown(result["improved_cv"])
 
                 # PDF Download
                 pdf_bytes = generate_pdf_from_markdown(clean_cv)
