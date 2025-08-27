@@ -50,7 +50,7 @@ def analyze_resume(uploaded_file, job_description, api_key=None, use_mock=True):
 
     try:
         stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4.1-nano",
             messages=messages,
             stream=True,
         )
@@ -58,11 +58,13 @@ def analyze_resume(uploaded_file, job_description, api_key=None, use_mock=True):
         response_text = ""
         for chunk in stream:
             if chunk.choices and chunk.choices[0].delta:
-                response_text += chunk.choices[0].delta.get("content", "")
+                delta = chunk.choices[0].delta.content or ""
+                response_text += delta
 
         suggestions = [line for line in response_text.split("\n") if line.strip()]
         return resume_text, {"score": "See GPT output", "suggestions": suggestions}
 
     except OpenAIError as e:
         return resume_text, {"score": "Error", "suggestions": [str(e)]}
+
 
