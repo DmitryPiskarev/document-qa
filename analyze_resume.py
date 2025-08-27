@@ -4,7 +4,7 @@ from pdf_parser import parse_pdf
 from docx_parser import parse_docx
 
 
-def analyze_resume(uploaded_file, job_description, api_key=None, use_mock=False):
+def analyze_resume(uploaded_file, job_description, api_key=None, use_mock=True):
     """
     Analyze resume vs job description.
     Returns dict: {"score": int/str, "suggestions": list of str}

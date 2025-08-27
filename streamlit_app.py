@@ -35,7 +35,12 @@ else:
 
     if uploaded_file and job_description:
         if st.button("Analyze Resume"):
-            result = analyze_resume(uploaded_file, job_description, openai_api_key)
+            # Show a spinner while processing
+            with st.spinner("Analyzing resume, please wait..."):
+                result = analyze_resume(uploaded_file, job_description, openai_api_key, use_mock=False)
+
+            # Display results
+            st.success("Analysis complete!")
             st.write("Match Score:", result["score"])
             st.write("Suggestions:")
             for bullet in result["suggestions"]:
