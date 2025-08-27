@@ -1,5 +1,5 @@
 # analyze_resume.py
-from openai import OpenAI, error as openai_error
+from openai import OpenAI, OpenAIError
 from pdf_parser import parse_pdf
 from docx_parser import parse_docx
 
@@ -63,6 +63,7 @@ def analyze_resume(uploaded_file, job_description, api_key=None, use_mock=False)
         suggestions = [line for line in response_text.split("\n") if line.strip()]
         return {"score": "See GPT output", "suggestions": suggestions}
 
-    except openai_error.OpenAIError as e:
+    except OpenAIError as e:
         # Catch any OpenAI errors and return as frontend-friendly message
         return {"score": "Error", "suggestions": [str(e)]}
+
