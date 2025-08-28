@@ -1,11 +1,10 @@
 import streamlit as st
 from analyze_resume import analyze_resume
-from pdf_generator import generate_pdf_from_markdown
 from utils import normalize_cv_markdown
 
 st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="centered")
 
-# --- Custom CSS for card-style widgets ---
+# --- Custom CSS ---
 st.markdown("""
     <style>
         .card {
@@ -32,6 +31,19 @@ st.markdown("""
             margin-bottom: 0.5rem;
             color: #34495e;
         }
+        .copy-btn {
+            background-color: #2c7be5;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .copy-btn:hover {
+            background-color: #1a5bb8;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -57,7 +69,7 @@ else:
         if st.button("🚀 Analyze Resume", use_container_width=True):
             with st.spinner("Analyzing resume, please wait..."):
                 resume_text, result = analyze_resume(
-                    uploaded_file, job_description, openai_api_key, use_mock=True
+                    uploaded_file, job_description, openai_api_key, use_mock=False
                 )
 
             st.success("✅ Analysis complete!")
@@ -86,57 +98,36 @@ else:
                         for bullet in bullets:
                             st.markdown(f"- {bullet}")
                 else:
-                    # fallback if API still returns flat suggestions
                     for bullet in result.get("suggestions", []):
                         st.markdown(f"- {bullet}")
 
                 st.markdown("</div>", unsafe_allow_html=True)
 
-                if result.get("improved_cv"):
-                    clean_cv = normalize_cv_markdown(result["improved_cv"])
+            # --- Improved Resume ---
+            if result.get("improved_cv"):
+                clean_cv = normalize_cv_markdown(result["improved_cv"])
+                st.markdown("<div class='card'>", unsafe_allow_html=True)
+                st.subheader("📝 Improved Resume (Preview)")
+                st.markdown(result["improved_cv"], unsafe_allow_html=True)
 
-                    # --- Show resume normally ---
-                    st.markdown("<div class='card'>", unsafe_allow_html=True)
-                    st.subheader("📝 Improved Resume (Preview)")
-                    st.markdown(result["improved_cv"])
-                    st.markdown("</div>", unsafe_allow_html=True)
+                # Hidden textarea with CV text
+                st.markdown(
+                    f"""
+                    <textarea id="cv-text" style="position:absolute; left:-1000px; top:-1000px;">{clean_cv}</textarea>
+                    <button class="copy-btn" onclick="copyCV()">📋 Copy Resume Text</button>
+                    <script>
+                        function copyCV() {{
+                            var copyText = document.getElementById("cv-text");
+                            copyText.select();
+                            document.execCommand("copy");
+                            alert("✅ Resume copied to clipboard!");
+                        }}
+                    </script>
+                    """,
+                    unsafe_allow_html=True,
+                )
 
-                    # --- Hidden textarea for safe copy ---
-                    st.markdown(
-                        f"""
-                        <textarea id="cv-text" style="position:absolute; left:-1000px; top:-1000px;">{clean_cv}</textarea>
-                        """,
-                        unsafe_allow_html=True,
-                    )
-
-                    # --- Copy button ---
-                    st.markdown(
-                        """
-                        <button onclick="copyCV()" 
-                                style="
-                                    background-color:#4CAF50;
-                                    color:white;
-                                    border:none;
-                                    padding:10px 16px;
-                                    border-radius:6px;
-                                    font-size:14px;
-                                    cursor:pointer;
-                                    margin-top:10px;">
-                            📋 Copy Resume Text
-                        </button>
-                
-                        <script>
-                            function copyCV() {
-                                var copyText = document.getElementById("cv-text");
-                                copyText.select();
-                                document.execCommand("copy");
-                                alert("✅ Resume copied to clipboard!");
-                            }
-                        </script>
-                        """,
-                        unsafe_allow_html=True,
-                    )
-
+                st.markdown("</div>", unsafe_allow_html=True)
 
             # --- Original Resume ---
             with st.expander("📄 Original Resume (parsed text)"):
