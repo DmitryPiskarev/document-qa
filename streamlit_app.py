@@ -110,22 +110,10 @@ else:
                 st.subheader("📝 Improved Resume (Preview)")
                 st.markdown(result["improved_cv"], unsafe_allow_html=True)
 
-                # Hidden textarea with CV text
-                st.markdown(
-                    f"""
-                    <textarea id="cv-text" style="position:absolute; left:-1000px; top:-1000px;">{clean_cv}</textarea>
-                    <button class="copy-btn" onclick="copyCV()">📋 Copy Resume Text</button>
-                    <script>
-                        function copyCV() {{
-                            var copyText = document.getElementById("cv-text");
-                            copyText.select();
-                            document.execCommand("copy");
-                            alert("✅ Resume copied to clipboard!");
-                        }}
-                    </script>
-                    """,
-                    unsafe_allow_html=True,
-                )
+                # ✅ Native Streamlit Copy-to-Clipboard
+                if st.button("📋 Copy Resume Text", use_container_width=True):
+                    st.clipboard(clean_cv)
+                    st.success("✅ Resume copied to clipboard!")
 
                 st.markdown("</div>", unsafe_allow_html=True)
 
