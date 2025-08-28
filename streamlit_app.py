@@ -1,10 +1,33 @@
 import streamlit as st
-from openai import OpenAI
 from analyze_resume import analyze_resume
 from pdf_generator import generate_pdf_from_markdown
 from utils import normalize_cv_markdown
 
-st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="wide")
+st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="centered")
+
+# Custom CSS for card-style widgets
+st.markdown("""
+    <style>
+        .card {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.6rem;
+            background-color: #f9f9f9;
+            border: 1px solid #e6e6e6;
+            box-shadow: 1px 2px 6px rgba(0,0,0,0.05);
+        }
+        .metric-card {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .metric-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # Title
 st.title("📄 CV ↔ Job Description Matcher")
@@ -25,38 +48,44 @@ else:
     )
 
     if uploaded_file and job_description:
-        if st.button("🚀 Analyze Resume"):
+        if st.button("🚀 Analyze Resume", use_container_width=True):
             with st.spinner("Analyzing resume, please wait..."):
                 resume_text, result = analyze_resume(uploaded_file, job_description, openai_api_key, use_mock=False)
 
             st.success("✅ Analysis complete!")
 
-            # Layout in 2 columns
+            # --- Results Section ---
             col1, col2 = st.columns([1, 2])
 
             with col1:
-                st.metric(label="Match Score", value=result["score"])
+                st.markdown("<div class='card metric-card'>"
+                            f"{result['score']}<div class='metric-label'>Match Score</div>"
+                            "</div>", unsafe_allow_html=True)
 
             with col2:
+                st.markdown("<div class='card'>", unsafe_allow_html=True)
                 st.subheader("✨ Suggestions for Improvement")
                 for bullet in result["suggestions"]:
                     st.markdown(f"✔️ {bullet}")
+                st.markdown("</div>", unsafe_allow_html=True)
 
-            # Improved Resume
+            # --- Improved Resume ---
             if result["improved_cv"]:
                 clean_cv = normalize_cv_markdown(result["improved_cv"])
+                st.markdown("<div class='card'>", unsafe_allow_html=True)
                 st.subheader("📝 Improved Resume (Preview)")
                 st.markdown(result["improved_cv"])
+                st.markdown("</div>", unsafe_allow_html=True)
 
                 # PDF Download
-                pdf_bytes = generate_pdf_from_markdown(clean_cv)
                 st.download_button(
                     "📥 Download Improved Resume (PDF)",
-                    data=pdf_bytes,
+                    data=generate_pdf_from_markdown(clean_cv),
                     file_name="improved_resume.pdf",
                     mime="application/pdf",
+                    use_container_width=True
                 )
 
-            # Original Resume
+            # --- Original Resume ---
             with st.expander("📄 Original Resume (parsed text)"):
                 st.text_area("Resume text", resume_text, height=300)
