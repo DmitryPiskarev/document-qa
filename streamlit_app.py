@@ -92,38 +92,51 @@ else:
 
                 st.markdown("</div>", unsafe_allow_html=True)
 
-            if result.get("improved_cv"):
-                clean_cv = normalize_cv_markdown(result["improved_cv"])
+                if result.get("improved_cv"):
+                    clean_cv = normalize_cv_markdown(result["improved_cv"])
 
-                st.markdown("<div class='card'>", unsafe_allow_html=True)
-                st.subheader("📝 Improved Resume (Preview)")
-                st.markdown(result["improved_cv"])
-                st.markdown("</div>", unsafe_allow_html=True)
+                    # --- Show resume normally ---
+                    st.markdown("<div class='card'>", unsafe_allow_html=True)
+                    st.subheader("📝 Improved Resume (Preview)")
+                    st.markdown(result["improved_cv"])
+                    st.markdown("</div>", unsafe_allow_html=True)
 
-                # Hidden text area (stores clean CV safely)
-                st.markdown(f"""
-                    <textarea id="cv-text" style="position:absolute; left:-1000px;">{clean_cv}</textarea>
-                    <button onclick="copyCV()" 
-                            style="
-                                background-color:#4CAF50;
-                                color:white;
-                                border:none;
-                                padding:10px 16px;
-                                border-radius:6px;
-                                font-size:14px;
-                                cursor:pointer;
-                                margin-top:10px;">
-                        📋 Copy Resume Text
-                    </button>
-                    <script>
-                        function copyCV() {{
-                            var copyText = document.getElementById("cv-text");
-                            copyText.select();
-                            document.execCommand("copy");
-                            alert("✅ Resume copied to clipboard!");
-                        }}
-                    </script>
-                """, unsafe_allow_html=True)
+                    # --- Hidden textarea for safe copy ---
+                    st.markdown(
+                        f"""
+                        <textarea id="cv-text" style="position:absolute; left:-1000px; top:-1000px;">{clean_cv}</textarea>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+
+                    # --- Copy button ---
+                    st.markdown(
+                        """
+                        <button onclick="copyCV()" 
+                                style="
+                                    background-color:#4CAF50;
+                                    color:white;
+                                    border:none;
+                                    padding:10px 16px;
+                                    border-radius:6px;
+                                    font-size:14px;
+                                    cursor:pointer;
+                                    margin-top:10px;">
+                            📋 Copy Resume Text
+                        </button>
+                
+                        <script>
+                            function copyCV() {
+                                var copyText = document.getElementById("cv-text");
+                                copyText.select();
+                                document.execCommand("copy");
+                                alert("✅ Resume copied to clipboard!");
+                            }
+                        </script>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+
 
             # --- Original Resume ---
             with st.expander("📄 Original Resume (parsed text)"):
