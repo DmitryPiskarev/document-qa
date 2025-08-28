@@ -100,14 +100,22 @@ else:
                 st.markdown(result["improved_cv"])
                 st.markdown("</div>", unsafe_allow_html=True)
 
-                # PDF Download
-                st.download_button(
-                    "📥 Download Improved Resume (PDF)",
-                    data=generate_pdf_from_markdown(clean_cv),
-                    file_name="improved_resume.pdf",
-                    mime="application/pdf",
-                    use_container_width=True,
-                )
+                # Copy-to-Clipboard Button
+                copy_button = f"""
+                    <button onclick="navigator.clipboard.writeText(`{clean_cv}`)"
+                            style="
+                                background-color:#4CAF50;
+                                color:white;
+                                border:none;
+                                padding:10px 16px;
+                                border-radius:6px;
+                                font-size:14px;
+                                cursor:pointer;
+                                margin-top:10px;">
+                        📋 Copy Resume Text
+                    </button>
+                """
+                st.markdown(copy_button, unsafe_allow_html=True)
 
             # --- Original Resume ---
             with st.expander("📄 Original Resume (parsed text)"):
