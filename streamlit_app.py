@@ -5,7 +5,7 @@ from utils import normalize_cv_markdown
 
 st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="centered")
 
-# Custom CSS for card-style widgets
+# --- Custom CSS for card-style widgets ---
 st.markdown("""
     <style>
         .card {
@@ -18,7 +18,7 @@ st.markdown("""
         }
         .metric-card {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: #2c3e50;
         }
@@ -26,14 +26,20 @@ st.markdown("""
             font-size: 0.9rem;
             color: #7f8c8d;
         }
+        .section-title {
+            font-weight: 600;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+        }
     </style>
 """, unsafe_allow_html=True)
 
-# Title
+# --- Title ---
 st.title("📄 CV ↔ Job Description Matcher")
 st.caption("Get a match score, improvement suggestions, and a polished resume rewrite.")
 
-# API Key
+# --- API Key ---
 openai_api_key = st.text_input("🔑 OpenAI API Key", type="password")
 
 if not openai_api_key:
@@ -50,27 +56,44 @@ else:
     if uploaded_file and job_description:
         if st.button("🚀 Analyze Resume", use_container_width=True):
             with st.spinner("Analyzing resume, please wait..."):
-                resume_text, result = analyze_resume(uploaded_file, job_description, openai_api_key, use_mock=False)
+                resume_text, result = analyze_resume(
+                    uploaded_file, job_description, openai_api_key, use_mock=False
+                )
 
             st.success("✅ Analysis complete!")
 
-            # --- Results Section ---
+            # --- Score and Recommendations ---
             col1, col2 = st.columns([1, 2])
 
             with col1:
-                st.markdown("<div class='card metric-card'>"
-                            f"{result['score']}<div class='metric-label'>Match Score</div>"
-                            "</div>", unsafe_allow_html=True)
+                st.markdown(
+                    f"""
+                    <div class='card metric-card'>
+                        {result['score']}
+                        <div class='metric-label'>Match Score</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
 
             with col2:
                 st.markdown("<div class='card'>", unsafe_allow_html=True)
                 st.subheader("✨ Suggestions for Improvement")
-                for bullet in result["suggestions"]:
-                    st.markdown(f"✔️ {bullet}")
+
+                if "recommendations" in result:
+                    for section, bullets in result["recommendations"].items():
+                        st.markdown(f"<div class='section-title'>{section}</div>", unsafe_allow_html=True)
+                        for bullet in bullets:
+                            st.markdown(f"- {bullet}")
+                else:
+                    # fallback if API still returns flat suggestions
+                    for bullet in result.get("suggestions", []):
+                        st.markdown(f"- {bullet}")
+
                 st.markdown("</div>", unsafe_allow_html=True)
 
             # --- Improved Resume ---
-            if result["improved_cv"]:
+            if result.get("improved_cv"):
                 clean_cv = normalize_cv_markdown(result["improved_cv"])
                 st.markdown("<div class='card'>", unsafe_allow_html=True)
                 st.subheader("📝 Improved Resume (Preview)")
@@ -83,7 +106,7 @@ else:
                     data=generate_pdf_from_markdown(clean_cv),
                     file_name="improved_resume.pdf",
                     mime="application/pdf",
-                    use_container_width=True
+                    use_container_width=True,
                 )
 
             # --- Original Resume ---

@@ -46,18 +46,25 @@ def analyze_resume(uploaded_file, job_description, api_key=None, use_mock=True):
     # 3️⃣ Call OpenAI API
     client = OpenAI(api_key=api_key)
     prompt = f"""
-    You are a professional career consultant. Analyze this resume vs the job description. 
-    Respond ONLY with valid JSON in the following format (no extra text):
-
+    You are a professional career consultant. Analyze the following resume against the job description.
+    Your goal is to provide a **structured improvement plan** and then rewrite the resume so it matches the role better.
+    
+    Respond ONLY with valid JSON in this schema:
+    
     {{
       "score": <integer 0-100>,
-      "suggestions": ["bullet 1", "bullet 2", "bullet 3"],
-      "improved_cv": "<resume rewritten in clean Markdown>"
+      "recommendations": {{
+          "Skills & Keywords": ["bullet 1", "bullet 2", "bullet 3"],
+          "Experience Relevance": ["bullet 1", "bullet 2"],
+          "Impact & Metrics": ["bullet 1", "bullet 2"],
+          "Formatting & Clarity": ["bullet 1"]
+      }},
+      "improved_cv": "<resume rewritten in clean Markdown with clear sections>"
     }}
-
+    
     Resume:
     {resume_text}
-
+    
     Job Description:
     {job_description}
     """
