@@ -45,6 +45,21 @@ st.markdown("""
         .copy-btn:hover {
             background-color: #1a5bb8;
         }
+        
+        /* Target the copy button */
+        button[data-baseweb="button"] {
+            background-color: #2c7be5 !important;
+            color: white !important;
+            border-radius: 6px !important;
+            padding: 8px 14px !important;
+            font-size: 14px !important;
+            border: none !important;
+            transition: background 0.2s;
+        }
+
+        button[data-baseweb="button"]:hover {
+            background-color: #1a5bb8 !important;
+        }
     </style>
 """, unsafe_allow_html=True)
 
