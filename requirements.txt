@@ -6,4 +6,4 @@ reportlab
 markdown
 beautifulsoup4
 markdown2
-st-copy-to-clipboard
+st-copy-to-clipboard==0.1.6
