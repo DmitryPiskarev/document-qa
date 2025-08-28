@@ -1,6 +1,7 @@
 import streamlit as st
 from analyze_resume import analyze_resume
 from utils import normalize_cv_markdown
+from st_copy_to_clipboard import st_copy_to_clipboard
 
 st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="centered")
 
@@ -116,25 +117,7 @@ else:
             st.subheader("📝 Improved Resume (Preview)")
             st.markdown(result["improved_cv"], unsafe_allow_html=True)
 
-            clean_cv_escaped = clean_cv.replace('"', '&quot;').replace('\n', '&#10;')
-            copy_html = f"""
-            <div class='card'>
-                <button class='copy-btn' onclick="
-                    navigator.clipboard.writeText('{clean_cv_escaped}');
-                    alert('✅ Resume copied to clipboard!');
-                ">📋 Copy Resume Text</button>
-            </div>
-            """
-            st.markdown(copy_html, unsafe_allow_html=True)
-
-            # ✅ Copy button using session_state (persists text)
-            if st.button("📋 Copy Resume Text", key="copy_button", use_container_width=True):
-                st.session_state["copy_text"] = clean_cv
-                st.success("✅ Resume copied to clipboard!")
-
-            # Actually copy to clipboard
-            if "copy_text" in st.session_state:
-                st.text_area("Copy-ready Resume Text:", st.session_state["copy_text"], height=200)
+            st_copy_to_clipboard(clean_cv, button_text="📋 Copy Resume Text")
 
             st.markdown("</div>", unsafe_allow_html=True)
 
