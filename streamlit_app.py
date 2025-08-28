@@ -118,29 +118,7 @@ else:
             st.markdown(result["improved_cv"], unsafe_allow_html=True)
 
             st_copy_to_clipboard(clean_cv)
-
-            clean_cv_html = f"""
-            <div id="cv-content" style="font-family:Times, serif;">
-                {result['improved_cv']}
-            </div>
-            <button onclick="
-                const el = document.getElementById('cv-content');
-                const range = document.createRange();
-                range.selectNodeContents(el);
-                const sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
-                document.execCommand('copy');
-                sel.removeAllRanges();
-                alert('✅ Resume copied with formatting!');
-            ">
-            📋 Copy Resume with Formatting
-            </button>
-            """
-            st.markdown(clean_cv_html, unsafe_allow_html=True)
-
             st.markdown("</div>", unsafe_allow_html=True)
-
 
         # --- Original Resume ---
         with st.expander("📄 Original Resume (parsed text)"):
