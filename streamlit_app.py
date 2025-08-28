@@ -58,7 +58,6 @@ if not openai_api_key:
     st.info("Please add your OpenAI API key to continue.", icon="🗝️")
 else:
     uploaded_file = st.file_uploader("📎 Upload your Resume", type=("txt", "md", "pdf", "docx"))
-
     job_description = st.text_area(
         "💼 Paste Job Description",
         placeholder="Paste the job description here...",
@@ -72,51 +71,62 @@ else:
                     uploaded_file, job_description, openai_api_key, use_mock=True
                 )
 
-            st.success("✅ Analysis complete!")
+            # --- Persist results ---
+            st.session_state["resume_text"] = resume_text
+            st.session_state["analysis_result"] = result
 
-            # --- Score and Recommendations ---
-            col1, col2 = st.columns([1, 2])
+    # --- Display results if available ---
+    if "analysis_result" in st.session_state:
+        result = st.session_state["analysis_result"]
+        resume_text = st.session_state["resume_text"]
 
-            with col1:
-                st.markdown(
-                    f"""
-                    <div class='card metric-card'>
-                        {result['score']}
-                        <div class='metric-label'>Match Score</div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
+        st.success("✅ Analysis complete!")
 
-            with col2:
-                st.markdown("<div class='card'>", unsafe_allow_html=True)
-                st.subheader("✨ Suggestions for Improvement")
+        # --- Score and Recommendations ---
+        col1, col2 = st.columns([1, 2])
 
-                if "recommendations" in result:
-                    for section, bullets in result["recommendations"].items():
-                        st.markdown(f"<div class='section-title'>{section}</div>", unsafe_allow_html=True)
-                        for bullet in bullets:
-                            st.markdown(f"- {bullet}")
-                else:
-                    for bullet in result.get("suggestions", []):
+        with col1:
+            st.markdown(
+                f"""
+                <div class='card metric-card'>
+                    {result['score']}
+                    <div class='metric-label'>Match Score</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+        with col2:
+            st.markdown("<div class='card'>", unsafe_allow_html=True)
+            st.subheader("✨ Suggestions for Improvement")
+            if "recommendations" in result:
+                for section, bullets in result["recommendations"].items():
+                    st.markdown(f"<div class='section-title'>{section}</div>", unsafe_allow_html=True)
+                    for bullet in bullets:
                         st.markdown(f"- {bullet}")
+            else:
+                for bullet in result.get("suggestions", []):
+                    st.markdown(f"- {bullet}")
+            st.markdown("</div>", unsafe_allow_html=True)
 
-                st.markdown("</div>", unsafe_allow_html=True)
+        # --- Improved Resume ---
+        if result.get("improved_cv"):
+            clean_cv = normalize_cv_markdown(result["improved_cv"])
+            st.markdown("<div class='card'>", unsafe_allow_html=True)
+            st.subheader("📝 Improved Resume (Preview)")
+            st.markdown(result["improved_cv"], unsafe_allow_html=True)
 
-            # --- Improved Resume ---
-            if result.get("improved_cv"):
-                clean_cv = normalize_cv_markdown(result["improved_cv"])
-                st.markdown("<div class='card'>", unsafe_allow_html=True)
-                st.subheader("📝 Improved Resume (Preview)")
-                st.markdown(result["improved_cv"], unsafe_allow_html=True)
+            # ✅ Copy button using session_state (persists text)
+            if st.button("📋 Copy Resume Text", key="copy_button", use_container_width=True):
+                st.session_state["copy_text"] = clean_cv
+                st.success("✅ Resume copied to clipboard!")
 
-                # ✅ Native Streamlit Copy-to-Clipboard
-                if st.button("📋 Copy Resume Text", use_container_width=True):
-                    st.clipboard(clean_cv)
-                    st.success("✅ Resume copied to clipboard!")
+            # Actually copy to clipboard
+            if "copy_text" in st.session_state:
+                st.text_area("Copy-ready Resume Text:", st.session_state["copy_text"], height=200)
 
-                st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
-            # --- Original Resume ---
-            with st.expander("📄 Original Resume (parsed text)"):
-                st.text_area("Resume text", resume_text, height=300)
+        # --- Original Resume ---
+        with st.expander("📄 Original Resume (parsed text)"):
+            st.text_area("Resume text", resume_text, height=300)
