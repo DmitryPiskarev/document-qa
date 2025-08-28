@@ -1,7 +1,7 @@
 import streamlit as st
 from analyze_resume import analyze_resume
 from utils import normalize_cv_markdown
-from st_copy_to_clipboard import st_copy_to_clipboard
+from components.copy_button import st_copy_to_clipboard
 
 st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="centered")
 
