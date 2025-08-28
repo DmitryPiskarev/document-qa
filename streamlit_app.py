@@ -116,6 +116,17 @@ else:
             st.subheader("📝 Improved Resume (Preview)")
             st.markdown(result["improved_cv"], unsafe_allow_html=True)
 
+            clean_cv_escaped = clean_cv.replace('"', '&quot;').replace('\n', '&#10;')
+            copy_html = f"""
+            <div class='card'>
+                <button class='copy-btn' onclick="
+                    navigator.clipboard.writeText('{clean_cv_escaped}');
+                    alert('✅ Resume copied to clipboard!');
+                ">📋 Copy Resume Text</button>
+            </div>
+            """
+            st.markdown(copy_html, unsafe_allow_html=True)
+
             # ✅ Copy button using session_state (persists text)
             if st.button("📋 Copy Resume Text", key="copy_button", use_container_width=True):
                 st.session_state["copy_text"] = clean_cv
