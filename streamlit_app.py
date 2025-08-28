@@ -166,6 +166,16 @@ else:
 
             col_title, col_button = st.columns([5, 1])
 
+            st.markdown(f"""
+            <div class="card">
+                <div class="improved-resume-header">
+                    <h4>📝 Improved Resume (Preview)</h4>
+                    {st_copy_to_clipboard(clean_cv, return_html=True)}
+                </div>
+                <div>{result["improved_cv"]}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
             with col_title:
                 st.subheader("📝 Improved Resume (Preview)")
 
