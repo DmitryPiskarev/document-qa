@@ -60,6 +60,40 @@ st.markdown("""
         button[data-baseweb="button"]:hover {
             background-color: #1a5bb8 !important;
         }
+        /* Copy button styling */
+        .st-copy-to-clipboard-btn {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-weight: 500 !important;
+            padding: 6px 14px !important;
+            border-radius: 6px !important;
+            min-height: 38px !important;
+            margin-left: auto !important;  /* push to right */
+            line-height: 1.6 !important;
+            color: white !important;
+            background-color: #2c7be5 !important;
+            border: none !important;
+            cursor: pointer !important;
+        }
+
+        .st-copy-to-clipboard-btn:hover {
+            background-color: #1a5bb8 !important;
+            color: white !important;
+            border-color: #1a5bb8 !important;
+        }
+
+        .st-copy-to-clipboard-btn:active {
+            background-color: #155a9c !important;
+            color: white !important;
+        }
+
+        /* Optional: align button right next to section header */
+        .improved-resume-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 """, unsafe_allow_html=True)
 
