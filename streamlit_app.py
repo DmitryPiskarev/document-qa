@@ -118,7 +118,7 @@ else:
         if st.button("🚀 Analyze Resume", use_container_width=True):
             with st.spinner("Analyzing resume, please wait..."):
                 resume_text, result = analyze_resume(
-                    uploaded_file, job_description, openai_api_key, use_mock=True
+                    uploaded_file, job_description, openai_api_key, use_mock=False
                 )
 
             # --- Persist results ---
