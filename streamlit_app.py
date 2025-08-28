@@ -101,30 +101,34 @@ st.markdown("""
 st.title("📄 CV ↔ Job Description Matcher")
 st.caption("Get a match score, improvement suggestions, and a polished resume rewrite.")
 
-# --- API Key ---
-openai_api_key = st.text_input("🔑 OpenAI API Key", type="password")
+# --- Two-column layout ---
+left_col, right_col = st.columns([1, 2])
 
-if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-else:
-    uploaded_file = st.file_uploader("📎 Upload your Resume", type=("txt", "md", "pdf", "docx"))
-    job_description = st.text_area(
-        "💼 Paste Job Description",
-        placeholder="Paste the job description here...",
-        disabled=not uploaded_file,
-    )
+with left_col:
+    # --- API Key ---
+    openai_api_key = st.text_input("🔑 OpenAI API Key", type="password")
 
-    if uploaded_file and job_description:
-        if st.button("🚀 Analyze Resume", use_container_width=True):
-            with st.spinner("Analyzing resume, please wait..."):
-                resume_text, result = analyze_resume(
-                    uploaded_file, job_description, openai_api_key, use_mock=False
-                )
+    if not openai_api_key:
+        st.info("Please add your OpenAI API key to continue.", icon="🗝️")
+    else:
+        uploaded_file = st.file_uploader("📎 Upload your Resume", type=("txt", "md", "pdf", "docx"))
+        job_description = st.text_area(
+            "💼 Paste Job Description",
+            placeholder="Paste the job description here...",
+            disabled=not uploaded_file,
+            height=250,
+        )
 
-            # --- Persist results ---
-            st.session_state["resume_text"] = resume_text
-            st.session_state["analysis_result"] = result
+        if uploaded_file and job_description:
+            if st.button("🚀 Analyze Resume", use_container_width=True):
+                with st.spinner("Analyzing resume, please wait..."):
+                    resume_text, result = analyze_resume(
+                        uploaded_file, job_description, openai_api_key, use_mock=False
+                    )
+                st.session_state["resume_text"] = resume_text
+                st.session_state["analysis_result"] = result
 
+with right_col:
     # --- Display results if available ---
     if "analysis_result" in st.session_state:
         result = st.session_state["analysis_result"]
@@ -133,9 +137,9 @@ else:
         st.success("✅ Analysis complete!")
 
         # --- Score and Recommendations ---
-        col1, col2 = st.columns([1, 2])
+        score_col, suggestions_col = st.columns([1, 2])
 
-        with col1:
+        with score_col:
             st.markdown(
                 f"""
                 <div class='card metric-card'>
@@ -146,7 +150,7 @@ else:
                 unsafe_allow_html=True,
             )
 
-        with col2:
+        with suggestions_col:
             st.markdown("<div class='card'>", unsafe_allow_html=True)
             st.subheader("✨ Suggestions for Improvement")
             if "recommendations" in result:
@@ -164,13 +168,10 @@ else:
             clean_cv = normalize_cv_markdown(result["improved_cv"])
             st.markdown("<div class='card'>", unsafe_allow_html=True)
 
-            col_title, col_button = st.columns([5, 1])
-
-            with col_title:
+            header_col, button_col = st.columns([5, 1])
+            with header_col:
                 st.subheader("📝 Improved Resume (Preview)")
-
-            with col_button:
-                # Copy button, styled, minimalistic
+            with button_col:
                 st_copy_to_clipboard(
                     text=clean_cv,
                     before_copy_label="📋 Copy Resume",
