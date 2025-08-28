@@ -2,6 +2,7 @@ import streamlit as st
 from analyze_resume import analyze_resume
 from utils import normalize_cv_markdown
 from st_copy_to_clipboard import st_copy_to_clipboard
+import pyperclip
 
 st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="centered")
 
@@ -166,22 +167,14 @@ else:
 
             col_title, col_button = st.columns([5, 1])
 
-            st.markdown(f"""
-            <div class="card">
-                <div class="improved-resume-header">
-                    <h4>📝 Improved Resume (Preview)</h4>
-                    {st_copy_to_clipboard(clean_cv, return_html=True)}
-                </div>
-                <div>{result["improved_cv"]}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
             with col_title:
                 st.subheader("📝 Improved Resume (Preview)")
 
             with col_button:
-                # Copy button, styled, minimalistic
-                st_copy_to_clipboard(clean_cv)
+                if st.button("📋 Copy", key="copy_resume"):
+                    pyperclip.copy(clean_cv)
+                    st.success("✅ Resume copied to clipboard!")
+
 
             st.markdown(result["improved_cv"], unsafe_allow_html=True)
             st.markdown("</div>", unsafe_allow_html=True)
