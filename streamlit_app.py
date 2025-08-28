@@ -92,17 +92,18 @@ else:
 
                 st.markdown("</div>", unsafe_allow_html=True)
 
-            # --- Improved Resume ---
             if result.get("improved_cv"):
                 clean_cv = normalize_cv_markdown(result["improved_cv"])
+
                 st.markdown("<div class='card'>", unsafe_allow_html=True)
                 st.subheader("📝 Improved Resume (Preview)")
                 st.markdown(result["improved_cv"])
                 st.markdown("</div>", unsafe_allow_html=True)
 
-                # Copy-to-Clipboard Button
-                copy_button = f"""
-                    <button onclick="navigator.clipboard.writeText(`{clean_cv}`)"
+                # Hidden text area (stores clean CV safely)
+                st.markdown(f"""
+                    <textarea id="cv-text" style="position:absolute; left:-1000px;">{clean_cv}</textarea>
+                    <button onclick="copyCV()" 
                             style="
                                 background-color:#4CAF50;
                                 color:white;
@@ -114,8 +115,15 @@ else:
                                 margin-top:10px;">
                         📋 Copy Resume Text
                     </button>
-                """
-                st.markdown(copy_button, unsafe_allow_html=True)
+                    <script>
+                        function copyCV() {{
+                            var copyText = document.getElementById("cv-text");
+                            copyText.select();
+                            document.execCommand("copy");
+                            alert("✅ Resume copied to clipboard!");
+                        }}
+                    </script>
+                """, unsafe_allow_html=True)
 
             # --- Original Resume ---
             with st.expander("📄 Original Resume (parsed text)"):
