@@ -114,7 +114,16 @@ else:
         if result.get("improved_cv"):
             clean_cv = normalize_cv_markdown(result["improved_cv"])
             st.markdown("<div class='card'>", unsafe_allow_html=True)
-            st.subheader("📝 Improved Resume (Preview)")
+
+            col_title, col_button = st.columns([5, 1])
+
+            with col_title:
+                st.subheader("📝 Improved Resume (Preview)")
+
+            with col_button:
+                # Copy button, styled, minimalistic
+                st_copy_to_clipboard(clean_cv)
+
             st.markdown(result["improved_cv"], unsafe_allow_html=True)
 
             st_copy_to_clipboard(clean_cv)
