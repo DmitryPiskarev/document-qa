@@ -6,4 +6,3 @@ reportlab
 markdown
 beautifulsoup4
 markdown2
-weasyprint
