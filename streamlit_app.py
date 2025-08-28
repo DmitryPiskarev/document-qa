@@ -3,7 +3,8 @@ from analyze_resume import analyze_resume
 from utils import normalize_cv_markdown
 from components.copy_button import st_copy_to_clipboard
 
-st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="centered")
+# st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="centered")
+st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="wide")
 
 # --- Custom CSS ---
 st.markdown("""
