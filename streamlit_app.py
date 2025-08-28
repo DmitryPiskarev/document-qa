@@ -125,8 +125,6 @@ else:
                 st_copy_to_clipboard(clean_cv)
 
             st.markdown(result["improved_cv"], unsafe_allow_html=True)
-
-            st_copy_to_clipboard(clean_cv)
             st.markdown("</div>", unsafe_allow_html=True)
 
         # --- Original Resume ---
