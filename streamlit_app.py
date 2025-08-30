@@ -55,7 +55,7 @@ if st.session_state.step == "upload":
     if st.session_state.uploaded_file and st.session_state.job_description:
         if st.button("🚀 Analyze Resume", use_container_width=True):
             st.session_state.step = "analyzing"
-            st.experimental_rerun()
+            st.rerun()
 
 # --- Step 3: Sidebar with inputs while analyzing / after results ---
 if st.session_state.step in ["analyzing", "done"]:
