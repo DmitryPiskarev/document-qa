@@ -63,11 +63,6 @@ st.markdown("""
             background-color: #155a9c !important;
             color: white !important;
         }
-        .sticky-left > div[data-testid="stVerticalBlock"] {
-            position: sticky;
-            top: 80px;  /* adjust if you have a header */
-            z-index: 10;
-        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -93,24 +88,27 @@ else:
         col_right = None
 
     with col_left:
-        st.markdown('<div class="sticky-left">', unsafe_allow_html=True)
-        uploaded_file = st.file_uploader("📎 Upload your Resume", type=("txt", "md", "pdf", "docx"))
-        job_description = st.text_area(
-            "💼 Paste Job Description",
-            placeholder="Paste the job description here...",
-            disabled=not uploaded_file,
-        )
+        # --- Sidebar (left column) ---
+        with st.sidebar:
+            st.title("📄 CV Matcher Settings")
+            openai_api_key = st.text_input("🔑 OpenAI API Key", type="password")
 
-        if uploaded_file and job_description:
-            if st.button("🚀 Analyze Resume", use_container_width=True):
-                with st.spinner("Analyzing resume, please wait..."):
-                    resume_text, result = analyze_resume(
-                        uploaded_file, job_description, openai_api_key, use_mock=False
-                    )
-                st.session_state["resume_text"] = resume_text
-                st.session_state["analysis_result"] = result
-                st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
+            uploaded_file = st.file_uploader("📎 Upload your Resume", type=("txt", "md", "pdf", "docx"))
+            job_description = st.text_area(
+                "💼 Paste Job Description",
+                placeholder="Paste the job description here...",
+                disabled=not uploaded_file,
+            )
+
+            if uploaded_file and job_description and openai_api_key:
+                if st.button("🚀 Analyze Resume", use_container_width=True):
+                    with st.spinner("Analyzing resume, please wait..."):
+                        resume_text, result = analyze_resume(
+                            uploaded_file, job_description, openai_api_key, use_mock=False
+                        )
+                    st.session_state["resume_text"] = resume_text
+                    st.session_state["analysis_result"] = result
+                    st.rerun()
     # --- Results area (right column) ---
     if has_result and col_right:
         result = st.session_state["analysis_result"]
