@@ -63,9 +63,9 @@ st.markdown("""
             background-color: #155a9c !important;
             color: white !important;
         }
-        .sticky-left {
+        .sticky-left > div[data-testid="stVerticalBlock"] {
             position: sticky;
-            top: 1rem;
+            top: 80px;  /* adjust if you have a header */
             z-index: 10;
         }
     </style>
@@ -93,9 +93,7 @@ else:
         col_right = None
 
     with col_left:
-        st.markdown("""
-            <div class="sticky-left">
-        """, unsafe_allow_html=True)
+        st.markdown('<div class="sticky-left">', unsafe_allow_html=True)
         uploaded_file = st.file_uploader("📎 Upload your Resume", type=("txt", "md", "pdf", "docx"))
         job_description = st.text_area(
             "💼 Paste Job Description",
@@ -112,7 +110,7 @@ else:
                 st.session_state["resume_text"] = resume_text
                 st.session_state["analysis_result"] = result
                 st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
     # --- Results area (right column) ---
     if has_result and col_right:
         result = st.session_state["analysis_result"]
