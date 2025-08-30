@@ -127,7 +127,7 @@ if st.session_state.get("analyzing", False):
     st.session_state["resume_text"] = resume_text
     st.session_state["analysis_result"] = result
     st.session_state["analyzing"] = False
-    st.experimental_rerun()
+    st.rerun()
 
 # --- Show Results ---
 if "analysis_result" in st.session_state:
