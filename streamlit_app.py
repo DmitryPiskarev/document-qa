@@ -44,18 +44,27 @@ if st.session_state.step == "enter_key":
     if st.session_state.openai_api_key:
         st.session_state.step = "upload"
 
-# --- Step 2: Upload CV & Job Description (main page) ---
 if st.session_state.step == "upload":
-    st.session_state.uploaded_file = st.file_uploader("📎 Upload your Resume", type=("txt", "md", "pdf", "docx"))
-    st.session_state.job_description = st.text_area(
+    uploaded_file = st.file_uploader(
+        "📎 Upload your Resume",
+        type=("txt", "md", "pdf", "docx")
+    )
+    job_description = st.text_area(
         "💼 Paste Job Description",
         placeholder="Paste the job description here...",
-        value=st.session_state.job_description
+        value=st.session_state.get("job_description", "")
     )
-    if st.session_state.uploaded_file and st.session_state.job_description:
+
+    if uploaded_file is not None:
+        st.session_state.uploaded_file = uploaded_file
+
+    if job_description:
+        st.session_state.job_description = job_description
+
+    if st.session_state.get("uploaded_file") and st.session_state.get("job_description"):
         if st.button("🚀 Analyze Resume", use_container_width=True):
             st.session_state.step = "analyzing"
-            st.rerun()
+            st.rerun()  # <-- safe now, file is stored
 
 # --- Step 3: Sidebar with inputs while analyzing / after results ---
 if st.session_state.step in ["analyzing", "done"]:
@@ -80,17 +89,19 @@ if st.session_state.step in ["analyzing", "done"]:
 
 # --- Step 4: Perform Analysis ---
 if st.session_state.step == "analyzing":
-    st.info("Analyzing resume, please wait...", icon="⏳")
-    resume_text, result = analyze_resume(
-        st.session_state.uploaded_file,
-        st.session_state.job_description,
-        st.session_state.openai_api_key,
-        use_mock=False
-    )
-    st.session_state.resume_text = resume_text
-    st.session_state.analysis_result = result
-    st.session_state.step = "done"
-    st.rerun()
+    uploaded_file = st.session_state.get("uploaded_file")
+    job_description = st.session_state.get("job_description")
+    api_key = st.session_state.get("openai_api_key")
+
+    if uploaded_file is None or job_description is None:
+        st.error("No uploaded file or job description found.")
+    else:
+        st.info("Analyzing resume, please wait...", icon="⏳")
+        resume_text, result = analyze_resume(uploaded_file, job_description, api_key)
+        st.session_state.resume_text = resume_text
+        st.session_state.analysis_result = result
+        st.session_state.step = "done"
+        st.rerun()
 
 # --- Step 5: Show Results ---
 if st.session_state.step == "done" and st.session_state.analysis_result:
