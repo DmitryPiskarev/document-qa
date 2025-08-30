@@ -88,6 +88,9 @@ else:
         col_right = None
 
     with col_left:
+        st.markdown("""
+            <div class="sticky-left">
+        """, unsafe_allow_html=True)
         uploaded_file = st.file_uploader("📎 Upload your Resume", type=("txt", "md", "pdf", "docx"))
         job_description = st.text_area(
             "💼 Paste Job Description",
@@ -104,7 +107,7 @@ else:
                 st.session_state["resume_text"] = resume_text
                 st.session_state["analysis_result"] = result
                 st.rerun()
-
+        st.markdown("</div>", unsafe_allow_html=True)
     # --- Results area (right column) ---
     if has_result and col_right:
         result = st.session_state["analysis_result"]
