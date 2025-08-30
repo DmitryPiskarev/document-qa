@@ -92,7 +92,7 @@ if st.session_state.step == "analyzing":
         st.error("No uploaded file or job description found.")
     else:
         st.info("Analyzing resume, please wait...", icon="⏳")
-        resume_text, result = analyze_resume(uploaded_file, job_description, api_key)
+        resume_text, result = analyze_resume(uploaded_file, job_description, api_key, use_mock=False)
         st.session_state.resume_text = resume_text
         st.session_state.analysis_result = result
         st.session_state.step = "done"
