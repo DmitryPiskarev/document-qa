@@ -76,7 +76,7 @@ if st.session_state.step in ["analyzing", "done"]:
         if st.session_state.uploaded_file and st.session_state.job_description:
             if st.button("🚀 Analyze Resume", use_container_width=True):
                 st.session_state.step = "analyzing"
-                st.experimental_rerun()
+                st.rerun()
 
 # --- Step 4: Perform Analysis ---
 if st.session_state.step == "analyzing":
@@ -90,7 +90,7 @@ if st.session_state.step == "analyzing":
     st.session_state.resume_text = resume_text
     st.session_state.analysis_result = result
     st.session_state.step = "done"
-    st.experimental_rerun()
+    st.rerun()
 
 # --- Step 5: Show Results ---
 if st.session_state.step == "done" and st.session_state.analysis_result:
