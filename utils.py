@@ -1,4 +1,14 @@
 import re
+from collections import Counter
+
+
+def extract_keywords(text: str, top_n: int = 20):
+    """Very simple keyword extraction using word frequency."""
+    words = re.findall(r'\b\w+\b', text.lower())
+    stopwords = {"and", "or", "the", "a", "an", "to", "for", "of", "in", "with", "on", "at"}
+    words = [w for w in words if w not in stopwords and len(w) > 2]
+    freq = Counter(words)
+    return [word for word, count in freq.most_common(top_n)]
 
 
 def normalize_cv_markdown(md_text: str) -> str:

@@ -1,7 +1,8 @@
 import streamlit as st
 from analyze_resume import analyze_resume
-from utils import normalize_cv_markdown
+from utils import normalize_cv_markdown, extract_keywords
 from components.copy_button import st_copy_to_clipboard
+from export import export_docx, export_pdf
 
 st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="wide")
 
@@ -137,6 +138,18 @@ else:
                         st.markdown(f"- {bullet}")
                 st.markdown("</div>", unsafe_allow_html=True)
 
+            # --- Keyword Coverage ---
+            job_keywords = extract_keywords(job_description, top_n=20)
+            resume_text_lower = resume_text.lower()
+            keyword_status = {kw: ("✅" if kw in resume_text_lower else "❌") for kw in job_keywords}
+
+            st.markdown("<div class='card'>", unsafe_allow_html=True)
+            st.subheader("🔑 Keyword Coverage")
+            for kw, status in keyword_status.items():
+                color = "green" if status == "✅" else "red"
+                st.markdown(f"- <span style='color:{color}'>{status} {kw}</span>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+
             # --- Improved Resume ---
             if result.get("improved_cv"):
                 clean_cv = normalize_cv_markdown(result["improved_cv"])
@@ -155,6 +168,21 @@ else:
 
                 st.markdown(result["improved_cv"], unsafe_allow_html=True)
                 st.markdown("</div>", unsafe_allow_html=True)
+
+                # --- Download Buttons ---
+                st.download_button(
+                    label="📥 Download as DOCX",
+                    data=export_docx(clean_cv),
+                    file_name="improved_resume.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                )
+
+                st.download_button(
+                    label="📥 Download as PDF",
+                    data=export_pdf(clean_cv),
+                    file_name="improved_resume.pdf",
+                    mime="application/pdf"
+                )
 
             with st.expander("📄 Original Resume (parsed text)"):
                 st.text_area("Resume text", resume_text, height=300)
