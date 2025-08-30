@@ -63,6 +63,11 @@ st.markdown("""
             background-color: #155a9c !important;
             color: white !important;
         }
+        .sticky-left {
+            position: sticky;
+            top: 1rem;
+            z-index: 10;
+        }
     </style>
 """, unsafe_allow_html=True)
 
