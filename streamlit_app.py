@@ -115,12 +115,46 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
 
     st.success("✅ Analysis complete!")
 
+    # 🎯 Mock sub-scores (replace with real ones if available in `result`)
+    breakdown_scores = {
+        "Skills Match": result.get("skills_score", 78),
+        "Experience Alignment": result.get("experience_score", 70),
+        "Education Relevance": result.get("education_score", 65),
+        "Keyword Presence": result.get("keyword_score", 85),
+        "Formatting / Clarity": result.get("formatting_score", 90),
+    }
+
+    # --- Radar Chart ---
+    df_scores = pd.DataFrame(dict(
+        criteria=list(breakdown_scores.keys()),
+        score=list(breakdown_scores.values())
+    ))
+
+    fig = px.line_polar(
+        df_scores,
+        r="score",
+        theta="criteria",
+        line_close=True,
+        range_r=[0, 100],
+        markers=True,
+    )
+    fig.update_traces(fill="toself", line_color="#2c7be5")
+    fig.update_layout(
+        polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+        showlegend=False,
+        margin=dict(l=40, r=40, t=40, b=40)
+    )
+
+    st.subheader("📊 Match Score Breakdown")
+    st.plotly_chart(fig, use_container_width=True)
+
+    # --- Main Match Score (still keep it) ---
     col1, col2 = st.columns([1, 2])
     with col1:
         st.markdown(f"""
             <div class='card metric-card'>
                 {result['score']}
-                <div class='metric-label'>Match Score</div>
+                <div class='metric-label'>Overall Match Score</div>
             </div>
         """, unsafe_allow_html=True)
 
