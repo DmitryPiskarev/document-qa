@@ -1,4 +1,4 @@
-# 📄 Document question answering template
+# 📄 CV <-> Job description matcher
 
 A simple Streamlit app that transforms your CV based on desired job description via OpenAI's GPT-4.1 nano.
 
