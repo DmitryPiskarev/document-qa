@@ -116,7 +116,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
     col1, col2 = st.columns([1, 2])
     with col1:
         st.markdown(f"""
-            <div class='card metric-card'>
+            <div class='card '>
                 {result['score']}
                 <div class='metric-label'>Match Score</div>
             </div>
