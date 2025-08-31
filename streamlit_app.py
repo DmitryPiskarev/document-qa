@@ -29,8 +29,8 @@ st.markdown("""
 
 # --- Title ---
 st.title("📄 CV ↔ Job Description Matcher")
-st.divider()
 st.caption("Get a match score, improvement suggestions, and a polished resume rewrite.")
+st.divider()
 
 # --- Initialize session state ---
 if "step" not in st.session_state:
