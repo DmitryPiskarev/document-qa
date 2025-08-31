@@ -30,7 +30,6 @@ st.markdown("""
 # --- Title ---
 st.title("📄 CV ↔ Job Description Matcher")
 st.caption("Get a match score, improvement suggestions, and a polished resume rewrite.")
-st.divider()
 
 # --- Initialize session state ---
 if "step" not in st.session_state:
@@ -180,3 +179,29 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
 
     with st.expander("📄 Original Resume (parsed text)"):
         st.text_area("Resume text", resume_text, height=300)
+
+    # --- Footer ---
+    st.markdown("""
+    <style>
+    footer {
+        visibility: hidden;
+    }
+    .custom-footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        padding: 8px 16px;
+        background-color: #f9f9f9;
+        color: #6c757d;
+        text-align: center;
+        font-size: 0.85rem;
+        border-top: 1px solid #e6e6e6;
+    }
+    </style>
+    <div class="custom-footer">
+        📄 CV Matcher • Built with ❤️ using Streamlit  
+        <a href="https://github.com/your-repo" target="_blank" style="color:#2c7be5; text-decoration:none;">GitHub</a> • 
+        <a href="mailto:your@email.com" style="color:#2c7be5; text-decoration:none;">Contact</a>
+    </div>
+    """, unsafe_allow_html=True)
