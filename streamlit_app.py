@@ -151,7 +151,6 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
     # --- Improved Resume ---
     if result.get("improved_cv"):
         clean_cv = normalize_cv_markdown(result["improved_cv"])
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
         col_title, col_button = st.columns([5, 1])
         with col_title:
             st.subheader("📝 Improved Resume (Preview)")
@@ -163,7 +162,6 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
                 key="resume_copy"
             )
         st.markdown(result["improved_cv"], unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
 
         # --- Download Buttons ---
         st.download_button(
