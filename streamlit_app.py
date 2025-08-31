@@ -116,7 +116,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
     col1, col2 = st.columns([1, 2])
     with col1:
         st.markdown(f"""
-            <div class='card '>
+            <div class='card metric-card'>
                 {result['score']}
                 <div class='metric-label'>Match Score</div>
             </div>
@@ -140,7 +140,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
     resume_text_lower = resume_text.lower()
     keyword_status = {kw: ("✅" if kw in resume_text_lower else "❌") for kw in job_keywords}
 
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
+    st.divider()
     st.subheader("🔑 Keyword Coverage")
     for kw, status in keyword_status.items():
         color = "green" if status == "✅" else "red"
