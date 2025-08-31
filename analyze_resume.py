@@ -76,7 +76,7 @@ def analyze_resume(uploaded_file, job_description, api_key=None, use_mock=True):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4.1",
+            model="gpt-4.1-nano",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.2
         )

@@ -145,7 +145,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
         margin=dict(l=40, r=40, t=40, b=40)
     )
 
-    st.subheader("📊 Match Score Breakdown")
+    st.subheader("Match Score Breakdown")
     st.plotly_chart(fig, use_container_width=True)
 
     # --- Main Match Score (still keep it) ---
@@ -177,9 +177,40 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
 
     st.divider()
     st.subheader("🔑 Keyword Coverage")
+
+    # --- CSS for keyword chips ---
+    st.markdown("""
+    <style>
+    .keyword-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+    }
+    .keyword-chip {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: white;
+    }
+    .keyword-pass {
+        background-color: #28a745; /* green */
+    }
+    .keyword-miss {
+        background-color: #dc3545; /* red */
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # --- Render keyword chips ---
+    chips_html = '<div class="keyword-container">'
     for kw, status in keyword_status.items():
-        color = "green" if status == "✅" else "red"
-        st.markdown(f"- <span style='color:{color}'>{status} {kw}</span>", unsafe_allow_html=True)
+        css_class = "keyword-pass" if status == "✅" else "keyword-miss"
+        chips_html += f'<div class="keyword-chip {css_class}">{kw}</div>'
+    chips_html += "</div>"
+
+    st.markdown(chips_html, unsafe_allow_html=True)
     st.divider()
 
     # --- Improved Resume ---
