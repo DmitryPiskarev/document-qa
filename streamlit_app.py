@@ -17,6 +17,13 @@ st.markdown("""
 .st-copy-to-clipboard-btn {display:inline-flex !important; align-items:center !important; justify-content:center !important; font-weight:500 !important; padding:6px 14px !important; border-radius:6px !important; min-height:38px !important; margin-left:auto !important; line-height:1.6 !important; color:white !important; background-color:#2c7be5 !important; border:none !important; cursor:pointer !important;}
 .st-copy-to-clipboard-btn:hover {background-color:#1a5bb8 !important; color:white !important;}
 .st-copy-to-clipboard-btn:active {background-color:#155a9c !important; color:white !important;}
+.card {
+    padding: 0.5rem 0;
+    margin: 1rem 0;
+    border-bottom: 1px solid #e0e0e0;  /* thin line separator */
+    background-color: transparent;     /* no background block */
+    box-shadow: none;                  /* remove shadow */
+}
 </style>
 """, unsafe_allow_html=True)
 
