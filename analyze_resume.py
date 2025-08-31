@@ -53,6 +53,11 @@ def analyze_resume(uploaded_file, job_description, api_key=None, use_mock=True):
     
     {{
       "score": <integer 0-100>,
+      "skills_score": <integer 0-100>,
+      "education_score": <integer 0-100>,
+      "experience_score": <integer 0-100>,
+      "keyword_score": <integer 0-100>,
+      "formatting_score": <integer 0-100>,
       "recommendations": {{
           "Skills & Keywords": ["bullet 1", "bullet 2", "bullet 3"],
           "Experience Relevance": ["bullet 1", "bullet 2"],
