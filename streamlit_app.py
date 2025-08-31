@@ -3,7 +3,8 @@ from analyze_resume import analyze_resume
 from utils import normalize_cv_markdown, extract_keywords
 from components.copy_button import st_copy_to_clipboard
 from export import export_docx, export_pdf
-import matplotlib.pyplot as plt
+import plotly.express as px
+import pandas as pd
 
 st.set_page_config(page_title="CV Matcher", page_icon="📄", layout="wide")
 
@@ -136,33 +137,16 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
         st.markdown("</div>", unsafe_allow_html=True)
 
     # --- Keyword Coverage ---
-    # --- Keyword Coverage ---
     job_keywords = extract_keywords(job_description, top_n=20)
     resume_text_lower = resume_text.lower()
-    keyword_status = {kw: (1 if kw in resume_text_lower else 0) for kw in job_keywords}
+    keyword_status = {kw: ("✅" if kw in resume_text_lower else "❌") for kw in job_keywords}
 
     st.divider()
     st.subheader("🔑 Keyword Coverage")
-
-    # ✅ Text list (keep your original for clarity)
-    for kw, matched in keyword_status.items():
-        color = "green" if matched else "red"
-        icon = "✅" if matched else "❌"
-        st.markdown(f"- <span style='color:{color}'>{icon} {kw}</span>", unsafe_allow_html=True)
-
-    # 📊 Chart visualization
-    fig, ax = plt.subplots(figsize=(6, len(keyword_status) * 0.35))
-    ax.barh(list(keyword_status.keys()), list(keyword_status.values()), color=["green" if v else "red" for v in keyword_status.values()])
-    ax.set_xlim(0, 1)
-    ax.set_xlabel("Match (0 = Missing, 1 = Present)")
-    ax.set_ylabel("Keywords")
-    ax.set_title("Keyword Match Coverage")
-
-    # Remove extra ticks
-    ax.set_xticks([0, 1])
-    ax.set_xticklabels(["❌ Missing", "✅ Present"])
-
-    st.pyplot(fig)
+    for kw, status in keyword_status.items():
+        color = "green" if status == "✅" else "red"
+        st.markdown(f"- <span style='color:{color}'>{status} {kw}</span>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
     # --- Improved Resume ---
     if result.get("improved_cv"):

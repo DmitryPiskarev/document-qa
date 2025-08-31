@@ -9,4 +9,5 @@ markdown2
 pyperclip
 st-copy-to-clipboard==0.1.6
 docx
-matplotlib
+plotly
+pandas
