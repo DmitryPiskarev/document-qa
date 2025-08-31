@@ -139,14 +139,45 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
     # --- Keyword Coverage ---
     job_keywords = extract_keywords(job_description, top_n=20)
     resume_text_lower = resume_text.lower()
-    keyword_status = {kw: ("✅" if kw in resume_text_lower else "❌") for kw in job_keywords}
+    keyword_status = [{"keyword": kw, "matched": 1 if kw in resume_text_lower else 0} for kw in job_keywords]
+
+    df_keywords = pd.DataFrame(keyword_status)
 
     st.divider()
     st.subheader("🔑 Keyword Coverage")
-    for kw, status in keyword_status.items():
-        color = "green" if status == "✅" else "red"
-        st.markdown(f"- <span style='color:{color}'>{status} {kw}</span>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+
+    # ✅ Text list (optional, keep both)
+    for row in df_keywords.itertuples():
+        color = "green" if row.matched else "red"
+        icon = "✅" if row.matched else "❌"
+        st.markdown(f"- <span style='color:{color}'>{icon} {row.keyword}</span>", unsafe_allow_html=True)
+
+    # 📊 Plotly chart
+    fig = px.bar(
+        df_keywords,
+        x="matched",
+        y="keyword",
+        orientation="h",
+        color="matched",
+        color_discrete_map={1: "green", 0: "red"},
+        labels={"matched": "Match", "keyword": "Keywords"},
+        title="Keyword Match Coverage",
+    )
+
+    fig.update_layout(
+        xaxis=dict(
+            tickmode="array",
+            tickvals=[0, 1],
+            ticktext=["❌ Missing", "✅ Present"],
+            range=[-0.2, 1.2],
+        ),
+        yaxis=dict(title=""),
+        showlegend=False,
+        margin=dict(l=10, r=10, t=40, b=10),
+        height=400,
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
     # --- Improved Resume ---
     if result.get("improved_cv"):
