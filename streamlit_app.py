@@ -29,6 +29,7 @@ st.markdown("""
 
 # --- Title ---
 st.title("📄 CV ↔ Job Description Matcher")
+st.divider()
 st.caption("Get a match score, improvement suggestions, and a polished resume rewrite.")
 
 # --- Initialize session state ---
@@ -123,7 +124,6 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
         """, unsafe_allow_html=True)
 
     with col2:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
         st.subheader("✨ Suggestions for Improvement")
         if "recommendations" in result:
             for section, bullets in result["recommendations"].items():
