@@ -13,7 +13,7 @@ st.markdown("""
 <style>
 .block-container {padding: 1rem 2rem;}
 .card {padding: 1rem; margin-bottom: 1rem; border-radius: 0.6rem; background-color: #f9f9f9; border: 1px solid #e6e6e6; box-shadow: 1px 2px 6px rgba(0,0,0,0.05);}
-.metric-card {text-align:center; font-size:1.8rem; font-weight:bold; color:#2c3e50;}
+.metric-card {text-align:center; font-size:2.0rem; font-weight:bold; color:#2c3e50;}
 .metric-label {font-size:0.9rem; color:#7f8c8d;}
 .section-title {font-weight:600; margin:0.5rem 0; color:#34495e;}
 .st-copy-to-clipboard-btn {display:inline-flex !important; align-items:center !important; justify-content:center !important; font-weight:500 !important; padding:6px 14px !important; border-radius:6px !important; min-height:38px !important; margin-left:auto !important; line-height:1.6 !important; color:white !important; background-color:#2c7be5 !important; border:none !important; cursor:pointer !important;}
