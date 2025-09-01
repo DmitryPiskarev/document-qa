@@ -253,25 +253,28 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
         }
         </style>
         """
+        st.markdown(button_css, unsafe_allow_html=True)
         col_title, col_button = st.columns([5, 1])
         with col_title:
             st.subheader("📝 Improved Resume (Preview)")
         with col_button:
-            st.markdown(
-                        f"""
-                <a href="data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,{export_docx(clean_cv).decode()}" 
-                   download="improved_resume.docx" class="download-btn">📥 DOCX</a>
-                <a href="data:application/pdf;base64,{export_pdf(clean_cv).decode()}" 
-                   download="improved_resume.pdf" class="download-btn">📥 PDF</a>
-                """,
-                        unsafe_allow_html=True
-                    )
             st_copy_to_clipboard(
                 text=clean_cv,
                 before_copy_label="📋 Copy",
                 after_copy_label="✅ Copied!",
                 key="resume_copy"
             )
+
+            st.markdown(
+                    f"""
+            <a href="data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,{export_docx(clean_cv).decode()}" 
+               download="improved_resume.docx" class="download-btn">📥 DOCX</a>
+            <a href="data:application/pdf;base64,{export_pdf(clean_cv).decode()}" 
+               download="improved_resume.pdf" class="download-btn">📥 PDF</a>
+            """,
+                    unsafe_allow_html=True
+                )
+
         st.markdown(result["improved_cv"], unsafe_allow_html=True)
 
     with st.expander("📄 Original Resume (parsed text)"):
