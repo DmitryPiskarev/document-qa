@@ -237,25 +237,30 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
         with col_title:
             st.subheader("📝 Improved Resume (Preview)")
         with col_button:
-            st_copy_to_clipboard(
-                text=clean_cv,
-                before_copy_label="📋 Copy Resume",
-                after_copy_label="✅ Copied!",
-                key="resume_copy"
-            )
-            # --- Download Buttons ---
-            st.download_button(
-                label="📥 Download as DOCX",
-                data=export_docx(clean_cv),
-                file_name="improved_resume.docx",
-                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            )
-            st.download_button(
-                label="📥 Download as PDF",
-                data=export_pdf(clean_cv),
-                file_name="improved_resume.pdf",
-                mime="application/pdf"
-            )
+            col_b1, col_b2, col_b3 = st.columns([2, 2, 2])
+            with col_b1:
+                st_copy_to_clipboard(
+                    text=clean_cv,
+                    before_copy_label="📋 Copy Resume",
+                    after_copy_label="✅ Copied!",
+                    key="resume_copy"
+                )
+            with col_b2:
+                # --- Download Buttons ---
+                st.download_button(
+                    label="📥 Download as DOCX",
+                    data=export_docx(clean_cv),
+                    file_name="improved_resume.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                )
+
+            with col_b3:
+                st.download_button(
+                    label="📥 Download as PDF",
+                    data=export_pdf(clean_cv),
+                    file_name="improved_resume.pdf",
+                    mime="application/pdf"
+                )
         st.markdown(result["improved_cv"], unsafe_allow_html=True)
 
     with st.expander("📄 Original Resume (parsed text)"):
