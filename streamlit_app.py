@@ -17,6 +17,7 @@ st.markdown("""
 .metric-card-sm {text-align:center; font-size:1.6rem; font-weight:bold; color:#2c3e50;}
 .metric-label {font-size:0.9rem; color:#7f8c8d;}
 .section-title {font-weight:600; margin:0.5rem 0; color:#34495e;}
+.section-subtitle {font-weight:500; margin:0.5rem 0; color:#34495e;}
 .st-copy-to-clipboard-btn {display:inline-flex !important; align-items:center !important; justify-content:center !important; font-weight:500 !important; padding:6px 14px !important; border-radius:6px !important; min-height:38px !important; margin-left:auto !important; line-height:1.6 !important; color:white !important; background-color:#2c7be5 !important; border:none !important; cursor:pointer !important;}
 .st-copy-to-clipboard-btn:hover {background-color:#1a5bb8 !important; color:white !important;}
 .st-copy-to-clipboard-btn:active {background-color:#155a9c !important; color:white !important;}
@@ -136,16 +137,15 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
             </div>
         """, unsafe_allow_html=True)
 
-        cols = st.columns(len(breakdown_scores))
+        st.markdown("<div class='section-subtitle'>Breakdown</div>", unsafe_allow_html=True)
 
-        for i, (label, value) in enumerate(breakdown_scores.items()):
-            with cols[i]:
-                st.markdown(f"""
-                    <div class='card metric-card-sm '>
-                        {value}
-                        <div class='metric-label'>{label}</div>
-                    </div>
-                """, unsafe_allow_html=True)
+        badges = " ".join([
+            f"<span style='display:inline-block; padding:6px 12px; margin:4px; "
+            f"border-radius:12px; background:#2c7be5; color:white; font-size:0.85rem;'>"
+            f"{label}: {value}%</span>"
+            for label, value in breakdown_scores.items()
+        ])
+        st.markdown(badges, unsafe_allow_html=True)
 
     with col2:
         # --- Radar Chart ---
