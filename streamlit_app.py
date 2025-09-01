@@ -240,7 +240,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
             display:inline-block;
             padding:6px 14px;
             margin:4px;
-            font-size:0.9rem;
+            font-size:0.5rem;
             font-weight:500;
             color:white;
             background-color:#2c7be5;
@@ -270,7 +270,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
 
             with cols[1]:
                 st.download_button(
-                    label="📄",  # icon only
+                    label="docs",  # icon only
                     data=export_docx(clean_cv),
                     file_name="improved_resume.docx",
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -278,7 +278,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
 
             with cols[2]:
                 st.download_button(
-                    label="🖨️",  # PDF icon
+                    label="pdf",  # PDF icon
                     data=export_pdf(clean_cv),
                     file_name="improved_resume.pdf",
                     mime="application/pdf"
