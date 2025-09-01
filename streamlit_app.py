@@ -258,25 +258,27 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
         with col_title:
             st.subheader("📝 Improved Resume (Preview)")
         with col_button:
-            cols = st.columns([1,1,1])
+            cols = st.columns([1, 1, 1])
 
-            with cols[0]:
+            with col1:
                 st_copy_to_clipboard(
                     text=clean_cv,
                     before_copy_label="📋",
                     after_copy_label="✅",
                     key="resume_copy_icon"
                 )
-            with cols[1]:
+
+            with col2:
                 st.download_button(
-                    label="DOCX",
+                    label="📄",  # icon only
                     data=export_docx(clean_cv),
                     file_name="improved_resume.docx",
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 )
-            with cols[2]:
+
+            with col3:
                 st.download_button(
-                    label="PDF",
+                    label="🖨️",  # PDF icon
                     data=export_pdf(clean_cv),
                     file_name="improved_resume.pdf",
                     mime="application/pdf"
