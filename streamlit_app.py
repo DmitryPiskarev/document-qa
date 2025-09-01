@@ -263,14 +263,14 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
             with cols[0]:
                 st_copy_to_clipboard(
                     text=clean_cv,
-                    before_copy_label="📋",
+                    before_copy_label="copy",
                     after_copy_label="✅",
                     key="resume_copy_icon"
                 )
 
             with cols[1]:
                 st.download_button(
-                    label="docs",  # icon only
+                    label="docx",  # icon only
                     data=export_docx(clean_cv),
                     file_name="improved_resume.docx",
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
