@@ -152,7 +152,12 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
         )
         fig.update_traces(fill="toself", line_color="#2c7be5")
         fig.update_layout(
-            polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+            polar=dict(
+                radialaxis=dict(visible=True, range=[0, 100]),
+                angularaxis=dict(
+                    tickfont=dict(size=14, family="Arial", color="black")  # adjust size here
+                ),
+            ),
             showlegend=False,
             margin=dict(l=40, r=40, t=40, b=40)
         )
