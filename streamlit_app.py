@@ -127,8 +127,9 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
     # --- Main Match Score (still keep it) ---
     col1, col2 = st.columns([1, 2])
 
-    st.subheader("Match Score Breakdown")
+
     with col1:
+        st.subheader("Match Score Breakdown")
         st.markdown(f"""
             <div class='card metric-card'>
                 {result['score']}
