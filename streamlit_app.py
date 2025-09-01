@@ -237,7 +237,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
         with col_title:
             st.subheader("📝 Improved Resume (Preview)")
         with col_button:
-            col_b1, col_b2, col_b3 = st.columns([2, 2, 2])
+            col_b1, col_b2, col_b3 = st.columns([3, 3, 3])
             with col_b1:
                 st_copy_to_clipboard(
                     text=clean_cv,
