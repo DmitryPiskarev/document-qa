@@ -243,21 +243,20 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
                 after_copy_label="✅ Copied!",
                 key="resume_copy"
             )
+            # --- Download Buttons ---
+            st.download_button(
+                label="📥 Download as DOCX",
+                data=export_docx(clean_cv),
+                file_name="improved_resume.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
+            st.download_button(
+                label="📥 Download as PDF",
+                data=export_pdf(clean_cv),
+                file_name="improved_resume.pdf",
+                mime="application/pdf"
+            )
         st.markdown(result["improved_cv"], unsafe_allow_html=True)
-
-        # --- Download Buttons ---
-        st.download_button(
-            label="📥 Download as DOCX",
-            data=export_docx(clean_cv),
-            file_name="improved_resume.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
-        st.download_button(
-            label="📥 Download as PDF",
-            data=export_pdf(clean_cv),
-            file_name="improved_resume.pdf",
-            mime="application/pdf"
-        )
 
     with st.expander("📄 Original Resume (parsed text)"):
         st.text_area("Resume text", resume_text, height=300)
