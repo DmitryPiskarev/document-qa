@@ -233,34 +233,45 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
     # --- Improved Resume ---
     if result.get("improved_cv"):
         clean_cv = normalize_cv_markdown(result["improved_cv"])
+
+        button_css = """
+        <style>
+        .download-btn {
+            display:inline-block;
+            padding:6px 14px;
+            margin:4px;
+            font-size:0.9rem;
+            font-weight:500;
+            color:white;
+            background-color:#2c7be5;
+            border-radius:6px;
+            text-decoration:none;
+            transition: background 0.2s ease;
+        }
+        .download-btn:hover {
+            background-color:#1a5bb8;
+        }
+        </style>
+        """
         col_title, col_button = st.columns([5, 1])
         with col_title:
             st.subheader("📝 Improved Resume (Preview)")
         with col_button:
-            col_b1, col_b2, col_b3 = st.columns([3, 3, 3])
-            with col_b1:
-                st_copy_to_clipboard(
-                    text=clean_cv,
-                    before_copy_label="📋 Copy Resume",
-                    after_copy_label="✅ Copied!",
-                    key="resume_copy"
-                )
-            with col_b2:
-                # --- Download Buttons ---
-                st.download_button(
-                    label="📥 Download as DOCX",
-                    data=export_docx(clean_cv),
-                    file_name="improved_resume.docx",
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                )
-
-            with col_b3:
-                st.download_button(
-                    label="📥 Download as PDF",
-                    data=export_pdf(clean_cv),
-                    file_name="improved_resume.pdf",
-                    mime="application/pdf"
-                )
+            st.markdown(
+                        f"""
+                <a href="data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,{export_docx(clean_cv).decode()}" 
+                   download="improved_resume.docx" class="download-btn">📥 DOCX</a>
+                <a href="data:application/pdf;base64,{export_pdf(clean_cv).decode()}" 
+                   download="improved_resume.pdf" class="download-btn">📥 PDF</a>
+                """,
+                        unsafe_allow_html=True
+                    )
+            st_copy_to_clipboard(
+                text=clean_cv,
+                before_copy_label="📋 Copy",
+                after_copy_label="✅ Copied!",
+                key="resume_copy"
+            )
         st.markdown(result["improved_cv"], unsafe_allow_html=True)
 
     with st.expander("📄 Original Resume (parsed text)"):
