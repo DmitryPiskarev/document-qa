@@ -260,7 +260,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
         with col_button:
             cols = st.columns([1, 1, 1])
 
-            with col1:
+            with cols[0]:
                 st_copy_to_clipboard(
                     text=clean_cv,
                     before_copy_label="📋",
@@ -268,7 +268,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
                     key="resume_copy_icon"
                 )
 
-            with col2:
+            with cols[1]:
                 st.download_button(
                     label="📄",  # icon only
                     data=export_docx(clean_cv),
@@ -276,7 +276,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 )
 
-            with col3:
+            with cols[2]:
                 st.download_button(
                     label="🖨️",  # PDF icon
                     data=export_pdf(clean_cv),
