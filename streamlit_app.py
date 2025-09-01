@@ -135,6 +135,14 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
             </div>
         """, unsafe_allow_html=True)
 
+        badges = " ".join([
+            f"<span style='display:inline-block; padding:6px 12px; margin:4px; "
+            f"border-radius:12px; background:#2c7be5; color:white; font-size:0.85rem;'>"
+            f"{label}: {value}%</span>"
+            for label, value in breakdown_scores.items()
+        ])
+        st.markdown(badges, unsafe_allow_html=True)
+
     with col2:
         # --- Radar Chart ---
         df_scores = pd.DataFrame(dict(
