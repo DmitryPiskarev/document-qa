@@ -233,31 +233,6 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
     # --- Improved Resume ---
     if result.get("improved_cv"):
         clean_cv = normalize_cv_markdown(result["improved_cv"])
-
-        button_css = """
-        <style>
-        .download-btn {
-            display:inline-block;
-            padding:6px 14px;
-            margin:4px;
-            font-size:0.5rem;
-            font-weight:500;
-            color:white;
-            background-color:#2c7be5;
-            border-radius:6px;
-            text-decoration:none;
-            transition: background 0.2s ease;
-        }
-        .download-btn:hover {
-            background-color:#1a5bb8;
-        }
-        </style>
-        """
-        st.markdown(button_css, unsafe_allow_html=True)
-        col_title, col_button = st.columns([5, 1])
-        with col_title:
-            st.subheader("Improved Resume")
-
         st.divider()
         st.markdown(result["improved_cv"], unsafe_allow_html=True)
 
