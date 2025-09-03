@@ -182,7 +182,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
     keyword_status = {kw: ("✅" if kw in resume_text_lower else "❌") for kw in job_keywords}
 
     st.divider()
-    st.subheader("🔑 Keyword Coverage")
+    st.subheader("Keywords Coverage")
 
     # --- CSS for keyword chips ---
     st.markdown("""
@@ -257,36 +257,9 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
         col_title, col_button = st.columns([5, 1])
         with col_title:
             st.subheader("Improved Resume")
-        with col_button:
-            cols = st.columns([1, 1, 1])
 
-            with cols[0]:
-                st_copy_to_clipboard(
-                    text=clean_cv,
-                    before_copy_label="copy",
-                    after_copy_label="✅",
-                    key="resume_copy_icon"
-                )
-
-            with cols[1]:
-                st.download_button(
-                    label="docx",  # icon only
-                    data=export_docx(clean_cv),
-                    file_name="improved_resume.docx",
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                )
-
-            with cols[2]:
-                st.download_button(
-                    label="pdf",  # PDF icon
-                    data=export_pdf(clean_cv),
-                    file_name="improved_resume.pdf",
-                    mime="application/pdf"
-                )
+        st.divider()
         st.markdown(result["improved_cv"], unsafe_allow_html=True)
-
-    with st.expander("📄 Original Resume (parsed text)"):
-        st.text_area("Resume text", resume_text, height=300)
 
     # --- Footer ---
     st.markdown("""
