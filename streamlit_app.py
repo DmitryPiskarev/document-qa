@@ -176,17 +176,6 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
 
         st.plotly_chart(fig, use_container_width=True)
 
-    st.subheader("✨ Suggestions for Improvement")
-    if "recommendations" in result:
-        for section, bullets in result["recommendations"].items():
-            st.markdown(f"<div class='section-title'>{section}</div>", unsafe_allow_html=True)
-            for bullet in bullets:
-                st.markdown(f"- {bullet}")
-    else:
-        for bullet in result.get("suggestions", []):
-            st.markdown(f"- {bullet}")
-    st.markdown("</div>", unsafe_allow_html=True)
-
     # --- Keyword Coverage ---
     job_keywords = extract_keywords(job_description, top_n=20)
     resume_text_lower = resume_text.lower()
@@ -230,6 +219,17 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
     st.markdown(chips_html, unsafe_allow_html=True)
     st.divider()
 
+    st.subheader("✨ Suggestions for Improvement")
+    if "recommendations" in result:
+        for section, bullets in result["recommendations"].items():
+            st.markdown(f"<div class='section-title'>{section}</div>", unsafe_allow_html=True)
+            for bullet in bullets:
+                st.markdown(f"- {bullet}")
+    else:
+        for bullet in result.get("suggestions", []):
+            st.markdown(f"- {bullet}")
+    st.markdown("</div>", unsafe_allow_html=True)
+
     # --- Improved Resume ---
     if result.get("improved_cv"):
         clean_cv = normalize_cv_markdown(result["improved_cv"])
@@ -256,7 +256,7 @@ if st.session_state.step == "done" and st.session_state.analysis_result:
         st.markdown(button_css, unsafe_allow_html=True)
         col_title, col_button = st.columns([5, 1])
         with col_title:
-            st.subheader("📝 Improved Resume (Preview)")
+            st.subheader("Improved Resume")
         with col_button:
             cols = st.columns([1, 1, 1])
 
